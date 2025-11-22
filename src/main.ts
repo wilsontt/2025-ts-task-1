@@ -44,9 +44,9 @@ export type TStockInfo = {
   sku: string;
   quantity: number;
 } // /* TODO: { sku: 型別; quantity: 型別 } */ any;
-export type OnShelfPlant = TBasicPlant & TStockInfo // /* TODO: BasicPlant, StockInfo 組合 */ any;
+export type TOnShelfPlant = TBasicPlant & TStockInfo // /* TODO: BasicPlant, StockInfo 組合 */ any;
 
-export const snakePlant: OnShelfPlant /* TODO: OnShelfPlant */ = {
+export const snakePlant: TOnShelfPlant /* TODO: OnShelfPlant */ = {
   id: 2,
   name: "虎尾蘭",
   price: 480,
@@ -58,11 +58,22 @@ export const snakePlant: OnShelfPlant /* TODO: OnShelfPlant */ = {
 // --- 題目四：interface（extends 組合） ---
 // 說明：定義 Price 與 Shippable，PlantItem 需 extends 兩者並包含 id/name。
 // 目標：理解介面擴充多重介面的寫法。
-export interface Price { /* TODO: price: 型別; currency:"TWD"|"USD" */ }
-export interface Shippable { /* TODO: weightKg: 型別; shipFrom: 型別 */ }
+interface IPlantItem {
+  id: number;
+  name: string;
+}
+export interface IPrice { 
+  price: number; 
+  currency: string; 
+  /* TODO: price: 型別; currency:"TWD"|"USD" */ }
+export interface IShippable { 
+  weightKg: number;
+  shipFrom: string;
+  /* TODO: weightKg: 型別; shipFrom: 型別 */ }
 // export interface PlantItem 組合 Price, Shippable 並包含 id/name
+export interface PlantItem extends IPlantItem, IPrice, IShippable {}
 
-export const fiddleLeafFig /* TODO: PlantItem */ = {
+export const fiddleLeafFig: IPlantItem /* TODO: PlantItem */ = {
   id: 101,
   name: "琴葉榕",
   price: 2500,
