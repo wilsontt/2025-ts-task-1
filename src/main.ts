@@ -2,12 +2,15 @@
 // 說明：請為以下變數補上正確型別（數字、字串、布林、字串陣列、帶型別的物件）。
 // 目標：能直接通過型別檢查與基本值檢查。
 
-export const plantId /* TODO: 型別 */ = 101;
-export const plantName /* TODO: 型別 */ = "琴葉榕（Fiddle Leaf Fig）";
-export const isAvailable /* TODO: 型別 */ = true;
-export const tags /* TODO: 型別 */ = ["大型植栽", "室內明亮散射光"];
-export const plant /* TODO: 物件型別 */ = { id: 101, name: "琴葉榕", price: 2500 };
-export const cart /* TODO: 陣列包物件的型別定義 > */ = [
+export const plantId: number /* TODO: 型別 */ = 101;
+export const plantName: string /* TODO: 型別 */ = "琴葉榕（Fiddle Leaf Fig）";
+export const isAvailable: boolean /* TODO: 型別 */ = true;
+export const tags: string[] /* TODO: 型別 */ = ["大型植栽", "室內明亮散射光"];
+export const plant: {id: number, name: string, price: number} /* TODO: 物件型別 */ = { id: 101, name: "琴葉榕", price: 2500 };
+export const cart: {
+  sku: string, name: string, qty: number, price: number,
+  potColor?: string
+  }[] /* TODO: 陣列包物件的型別定義 > */ = [
   { sku: "PLANT-1001", name: "虎尾蘭", qty: 2, price: 480 },
   { sku: "PLANT-2001", name: "龜背芋", qty: 1, price: 1200, potColor: "白" },
 ];
