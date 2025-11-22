@@ -73,7 +73,7 @@ export interface IShippable {
 // export interface PlantItem 組合 Price, Shippable 並包含 id/name
 export interface PlantItem extends IPlantItem, IPrice, IShippable {}
 
-export const fiddleLeafFig: IPlantItem /* TODO: PlantItem */ = {
+export const fiddleLeafFig: PlantItem /* TODO: PlantItem */ = {
   id: 101,
   name: "琴葉榕",
   price: 2500,
