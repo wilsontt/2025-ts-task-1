@@ -2,15 +2,15 @@
 // 說明：請為以下變數補上正確型別（數字、字串、布林、字串陣列、帶型別的物件）。
 // 目標：能直接通過型別檢查與基本值檢查。
 
-export const plantId: number /* TODO: 型別 */ = 101;
-export const plantName: string /* TODO: 型別 */ = "琴葉榕（Fiddle Leaf Fig）";
-export const isAvailable: boolean /* TODO: 型別 */ = true;
-export const tags: string[] /* TODO: 型別 */ = ["大型植栽", "室內明亮散射光"];
-export const plant: {id: number, name: string, price: number} /* TODO: 物件型別 */ = { id: 101, name: "琴葉榕", price: 2500 };
-export const cart: {
+export const plantId: number = 101;
+export const plantName: string = "琴葉榕（Fiddle Leaf Fig）";
+export const isAvailable: boolean = true;
+export const tags: string[] = ["大型植栽", "室內明亮散射光"];
+export const plant: {id: number, name: string, price: number} = { id: 101, name: "琴葉榕", price: 2500 };
+export const cart: Array< {
   sku: string, name: string, qty: number, price: number,
   potColor?: string
-  }[] /* TODO: 陣列包物件的型別定義 > */ = [
+  }> = [
   { sku: "PLANT-1001", name: "虎尾蘭", qty: 2, price: 480 },
   { sku: "PLANT-2001", name: "龜背芋", qty: 1, price: 1200, potColor: "白" },
 ];
@@ -26,9 +26,8 @@ export enum PlantCategory {
   IndoorPlant,      // 3
   OutdoorPlant,     // 4
 }
-// export const catKeyName: string = PlantCategory[/* TODO: 取得 LargePlant 的數值 */ 0];
 export const catKeyName: string = PlantCategory[PlantCategory.LargePlant];
-
+console.log(catKeyName);
 
 
 // --- 題目三：type（& 組合） ---
@@ -39,14 +38,14 @@ export type TBasicPlant = {
   id: number; 
   name: string; 
   price: number;
-} // /* TODO: { id: 型別; name: 型別; price: 型別 } */ any;
+} 
 export type TStockInfo = {
   sku: string;
   quantity: number;
-} // /* TODO: { sku: 型別; quantity: 型別 } */ any;
-export type TOnShelfPlant = TBasicPlant & TStockInfo // /* TODO: BasicPlant, StockInfo 組合 */ any;
+} 
+export type TOnShelfPlant = TBasicPlant & TStockInfo 
 
-export const snakePlant: TOnShelfPlant /* TODO: OnShelfPlant */ = {
+export const snakePlant: TOnShelfPlant = {
   id: 2,
   name: "虎尾蘭",
   price: 480,
@@ -58,22 +57,25 @@ export const snakePlant: TOnShelfPlant /* TODO: OnShelfPlant */ = {
 // --- 題目四：interface（extends 組合） ---
 // 說明：定義 Price 與 Shippable，PlantItem 需 extends 兩者並包含 id/name。
 // 目標：理解介面擴充多重介面的寫法。
-interface IPlantItem {
-  id: number;
-  name: string;
-}
 export interface IPrice { 
   price: number; 
-  currency: string; 
-  /* TODO: price: 型別; currency:"TWD"|"USD" */ }
+  currency: "TWD" | "USD"; 
+}
+
 export interface IShippable { 
   weightKg: number;
   shipFrom: string;
-  /* TODO: weightKg: 型別; shipFrom: 型別 */ }
-// export interface PlantItem 組合 Price, Shippable 並包含 id/name
-export interface PlantItem extends IPlantItem, IPrice, IShippable {}
+}
 
-export const fiddleLeafFig: PlantItem /* TODO: PlantItem */ = {
+export interface IPlantIDName {
+  id: number;
+  name: string;
+}
+   
+// export interface PlantItem 組合 Price, Shippable 並包含 id/name
+export interface PlantItem extends IPrice, IShippable, IPlantIDName {}
+
+export const fiddleLeafFig: PlantItem = {
   id: 101,
   name: "琴葉榕",
   price: 2500,
@@ -88,12 +90,13 @@ export const fiddleLeafFig: PlantItem /* TODO: PlantItem */ = {
 // 目標：以 type 定義函式型別並實作。
 export type CartItem = { price: number; qty: number };
 export type Coupon = { type: "percent" | "cash"; amount: number };
-export type CalcTotalFn = /* TODO: (參數型別) => 型別 */ any;
+export type CalcTotalFn = (items:CartItem[], coupon?: Coupon ) => number;
 
-export const calcTotal /* TODO: CalcTotalFn */ = (items, coupon) => {
+export const calcTotal: CalcTotalFn = (items, coupon) => {
   const subtotal = items.reduce((sum, it) => sum + it.price * it.qty, 0);
-  if (!coupon) return subtotal; 
-  if (coupon.type === "percent") return Math.max(0, Math.round(subtotal * (1 - coupon.amount / 100)));
+  if (!coupon) return subtotal;
+  if (coupon.type === "percent")
+    return Math.max(0, Math.round(subtotal * (1 - coupon.amount / 100)));
   return Math.max(0, subtotal - coupon.amount);
 };
 
@@ -103,6 +106,7 @@ export const calcTotal /* TODO: CalcTotalFn */ = (items, coupon) => {
 // API: https://fakestoreapi.com/products
 // 目標：理解泛型定義與應用。
 import axios from 'axios'; /* TODO */
+import type {AxiosResponse} from 'axios'
 export type PlantDTO = { 
   id: number; 
   title: string; 
@@ -110,9 +114,9 @@ export type PlantDTO = {
   category: string; 
 };
 
-export const fetchPlants = async () /* TODO */ => {
-  return axios.get('https://fakestoreapi.com/products');
-}
+export const fetchPlants = async (): Promise<AxiosResponse<PlantDTO[]>> => {
+  return axios.get("https://fakestoreapi.com/products");
+};
 
 
 
@@ -121,8 +125,13 @@ export const fetchPlants = async () /* TODO */ => {
 // 目標：掌握 Partial/Required 的互補與回傳保證。
 export type PlantBase = { id: number; name: string; price: number; description?: string };
 
-export function updatePlant(input: /* TODO */ any): /* TODO */ any {
-  const existing: /* TODO */ any = { id: 1, name: "虎尾蘭", price: 480, description: "耐陰、淨化空氣" };
+export function updatePlant(input: Partial<PlantBase>): Required<PlantBase> {
+  const existing: Required<PlantBase> = {
+    id: 1,
+    name: "虎尾蘭",
+    price: 480,
+    description: "耐陰、淨化空氣",
+  };
   const merged = { ...existing, ...input };
   return {
     id: merged.id,
@@ -136,8 +145,8 @@ export function updatePlant(input: /* TODO */ any): /* TODO */ any {
 // --- 題目八：Record ---
 // 說明：用 Record 表示庫存表。
 // 目標：以字串鍵對應到嚴格結構。
-export type Inventory = /* TODO */ any;
-export const inventory /* TODO */ = {
+export type Inventory = Record<string, number>; 
+export const inventory: Inventory  = {
   "PLANT-1001": 42,
   "PLANT-2001": 8,
 };
@@ -148,38 +157,61 @@ export const inventory /* TODO */ = {
 // 需求：
 // 1) CartPlant：只需 id/name/price
 // 2) PublicPlant：移除重量與出貨地
-export type CartPlant = /* TODO */ any;
-export type PublicPlant = /* TODO */ any;
+export type CartPlant = Pick<PlantItem, 'id' | "name" | "price">; 
+export type PublicPlant = Omit<PlantItem, "weightKg" | "shipFrom">; 
 
-export const cartPlant /* TODO */ = { id: 101, name: "琴葉榕", price: 2500 };
-export const publicPlant /* TODO */ = { id: 101, name: "琴葉榕", price: 2500, currency: "TWD" };
+export const cartPlant: CartPlant = {
+  id: 101,
+  name: "琴葉榕",
+  price: 2500,
+};
+export const publicPlant: PublicPlant = {
+  id: 101,
+  name: "琴葉榕",
+  price: 2500,
+  currency: "TWD",
+};
 
 
 // --- 題目十：綜合練習 ---
 // 說明：這是一個後台新增商品的功能，請將以下需求用 TypeScript 實作。
-/* 1️⃣ 定義 type Product
-    產品資料結構如下：
-    - id: 字串
-    - title: 字串
-    - category: 字串
-    - description: 字串
-    - origin_price: 數字
-    - price: 數字
-    - is_enabled: 布林
-    - unit: 字串 
-    - imageUrl: 字串
-    - imagesUrl: 字串陣列（非必要）
-*/
+//  1️⃣ 定義 type Product
+//   產品資料結構如下：
+//   - id: 字串
+//   - title: 字串
+//   - category: 字串
+//   - description: 字串
+//   - origin_price: 數字
+//   - price: 數字
+//   - is_enabled: 布林
+//   - unit: 字串 
+//   - imageUrl: 字串
+//   - imagesUrl: 字串陣列（非必要）
+
+
+export type TProduct ={
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  origin_price: string;
+  price: number;
+  is_enabled: boolean;
+  unit: string;
+  imageUrl: string;
+  imagesUrl?: string[];
+}
 
 /*
 2️⃣ 定義 type CreateProduct
 由 Product 衍生，但不包含 id（使用 Omit）
 */
-
+export type CreateProduct = Omit<TProduct, 'id'>;
 /*
 3️⃣ 定義 type UpdateProduct
 由 Product 衍生，id, title 必須有，其餘皆可選（使用 Partial 與 Omit）
 */
+export type UpdateProduct = Pick<TProduct, "id" | "title"> & Partial<Omit<TProduct, 'id' | 'title'>>;
 
 /*
 4️⃣ 實作函式 submitProduct(type, product)
@@ -191,3 +223,16 @@ export const publicPlant /* TODO */ = { id: 101, name: "琴葉榕", price: 2500,
 create → "新增商品成功：${product.title}"
 update → "更新商品成功：${product.id}"
 */
+
+export const submitProduct = (
+  type: "create" | "update",
+  product: CreateProduct | UpdateProduct
+): string => {
+  if (type===`create`) {
+    return `新增商品成功：${(product as CreateProduct).title}`
+  }
+  else {
+    return `更新商品成功：${(product as UpdateProduct).id}`
+  }
+}; 
+
