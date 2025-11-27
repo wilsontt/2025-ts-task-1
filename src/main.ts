@@ -194,7 +194,7 @@ export type TProduct ={
   title: string;
   category: string;
   description: string;
-  origin_price: string;
+  origin_price: number;
   price: number;
   is_enabled: boolean;
   unit: string;
